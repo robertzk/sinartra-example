@@ -2,7 +2,21 @@
 
 if (!require("httpuv")) install.packages("httpuv")
 
+# Download mutatr and sinartra
+
+if (!require("devtools")) {
+  install.packages("devtools")
+}
+
+devtools::install_github("hadley/mutatr")
+devtools::install_github("hadley/sinartra")
+
+# Run the server.
+
 port <- 8101
+
+library(
+
 
 httpuv_callbacks <- list(
   onHeaders = function(req) { NULL },
