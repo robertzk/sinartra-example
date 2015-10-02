@@ -4,17 +4,14 @@ if (!require("httpuv")) install.packages("httpuv")
 
 # Download mutatr and sinartra
 
-if (!require("devtools")) {
-  install.packages("devtools")
-}
-
-devtools::install_github("hadley/mutatr")
-devtools::install_github("hadley/sinartra")
+if (!require("devtools")) { install.packages("devtools") }
+if (!require("mutatr"))   { devtools::install_github("hadley/mutatr") }
+if (!require("sinartra")) { devtools::install_github("hadley/sinartra") }
 library(sinartra)
 
 # Run the server.
 
-port <- 8101
+port <- 8102
 
 first_route <- function(query) {
   query$blah <- "yay"
@@ -43,6 +40,7 @@ Router$get("/fourth/route", "fourth_route")
 httpuv_callbacks <- list(
   onHeaders = function(req) { NULL },
   call      = function(req) {
+    browser()
     list(
       status = 401L,
       headers = list(
