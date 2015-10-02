@@ -4,6 +4,7 @@ if (!require("httpuv")) install.packages("httpuv")
 
 # Download mutatr and sinartra
 
+if (!require("jsonlite")) { install.packages("jsonlite") }
 if (!require("devtools")) { install.packages("devtools") }
 if (!require("mutatr"))   { devtools::install_github("hadley/mutatr") }
 if (!require("sinartra")) { devtools::install_github("hadley/sinartra") }
