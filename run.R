@@ -11,7 +11,7 @@ library(sinartra)
 
 # Run the server.
 
-port <- 8102
+port <- 8103
 
 first_route <- function(query) {
   query$blah <- "yay"
@@ -37,27 +37,31 @@ Router$get("/third/route", "third_route")
 Router$get("space", function(...) { NULL })
 Router$get("/fourth/route", "fourth_route")
 
+source("query.R")
+
 httpuv_callbacks <- list(
   onHeaders = function(req) { NULL },
   call      = function(req) {
-    browser()
+    out <- Router$route(req$PATH_INFO, extract_query_from_request(req))
+
     list(
-      status = 401L,
+      status = 200L,
       headers = list(
-        'Content-Type' = 'text/plain'
+        'Content-Type' = 'text/json'
       ),
-      body = paste('Access denied.')
+      body = jsonlite::toJSON(out) 
     )
   },
   onWSOpen  = function(ws)  { NULL }
 )
 
-server_id <- httpuv::startServer("0.0.0.0", port, httpuv_callbacks)
-on.exit({ httpuv::stopServer(server_id) }, add = TRUE)
+local({ 
+  server_id <- httpuv::startServer("0.0.0.0", port, httpuv_callbacks)
+  on.exit({ print("STOPPING"); httpuv::stopServer(server_id) }, add = TRUE)
 
-repeat {
-  httpuv::service(1)
-  Sys.sleep(0.001)
-}
-
+  repeat {
+    httpuv::service(1)
+    Sys.sleep(0.001)
+  }
+})
 
