@@ -10,13 +10,35 @@ if (!require("devtools")) {
 
 devtools::install_github("hadley/mutatr")
 devtools::install_github("hadley/sinartra")
+library(sinartra)
 
 # Run the server.
 
 port <- 8101
 
-library(
+first_route <- function(query) {
+  query$blah <- "yay"
+  query
+}
 
+second_route <- function(query) {
+  list("Second" = "Woohoo")
+}
+
+third_route <- function(query) {
+  stop("ERROR")
+}
+
+fourth_route <- function(query) {
+  list(data = iris, query = query)
+}
+
+Router$base_url("^//")
+Router$get("/first/route", "first_route")
+Router$get("/second/route", "second_route")
+Router$get("/third/route", "third_route")
+Router$get("space", function(...) { NULL })
+Router$get("/fourth/route", "fourth_route")
 
 httpuv_callbacks <- list(
   onHeaders = function(req) { NULL },
